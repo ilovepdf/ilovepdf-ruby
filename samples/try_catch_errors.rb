@@ -6,8 +6,7 @@ begin
   my_task = Ilovepdf::Tool::Split.new("PUBLIC_KEY", "SECRET_KEY");
 
   # File object keeps information about its server_filename and the properties you can set
-  #file = my_task.add_file '/path/to/file/document.pdf'
-  file = my_task.add_file ::Ilovepdf.root.join("uploads/sample_pdf.pdf")
+  file = my_task.add_file '/path/to/file/document.pdf'
   # set ranges to split the document
   my_task.ranges = '2-4,6-8'
 

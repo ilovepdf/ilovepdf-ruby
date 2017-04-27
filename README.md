@@ -87,7 +87,7 @@ Example:
 imagepdf_task = Ilovepdf::Tool::Imagepdf.new(public_key, secret_key)
 http_response = imagepdf_task.execute
 puts http_response.body
-if imagepdf_task.download.success?
+if imagepdf_task.download
   puts "Your file was downloaded successfully!"
 end
 ```

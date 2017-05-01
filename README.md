@@ -1,5 +1,6 @@
 iLovePDF Api - Ruby Library
 --------------------------
+[![Build Status](https://travis-ci.org/ilovepdf/ilovepdf-php.svg?branch=master)](https://travis-ci.org/ilovepdf/ilovepdf-php)
 [![GitHub version](https://badge.fury.io/gh/ilovepdf%2Filovepdf-ruby.svg)](https://badge.fury.io/gh/ilovepdf%2Filovepdf-ruby)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 

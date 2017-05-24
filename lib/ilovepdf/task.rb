@@ -1,7 +1,9 @@
 module Ilovepdf
   class Task < Ilovepdf
     attr_accessor :task_id, :tool, :packaged_filename, :output_filename,
-                  :ignore_errors, :ignore_password, :try_pdf_repair
+                  :ignore_errors, :ignore_password, :try_pdf_repair,
+                  :output_file, :output_filename, :output_filetype,
+                  :result
 
     API_PARAMS = []
 
@@ -39,7 +41,23 @@ module Ilovepdf
     end
 
     def download(path=nil)
-      download_file(path)
+      download_file
+
+      if path
+        path = Pathname.new(path).to_s if path.is_a?(Pathname)
+        path.chop! if path.end_with? '/'
+      else
+        path = '.'
+      end
+
+      destination = "#{path}/#{self.output_filename}"
+      ::File.open(destination, 'wb'){|file| file.write(self.output_file) }
+      true
+    end
+
+    def blob
+      download_file
+      self.output_file
     end
 
     # [API Methods] Actions on task
@@ -49,7 +67,7 @@ module Ilovepdf
     end
 
     def execute
-      perform_process_request
+      self.result = perform_process_request
     end
 
     def delete!
@@ -87,7 +105,7 @@ module Ilovepdf
       @files = new_array_of_files
     end
 
-    def download_file path
+    def download_file
       response = perform_filedownload_request
       content_disposition = response.headers[:content_disposition]
 
@@ -98,15 +116,9 @@ module Ilovepdf
         filename =  match_data[1].gsub('"', '')
       end
 
-      if path
-        path = Pathname.new(path).to_s if path.is_a?(Pathname)
-        path.chop! if path.end_with? '/'
-      else
-        path = '.'
-      end
-      destination = "#{path}/#{filename}"
-      ::File.open(destination, 'wb'){|file| file.write(response.raw_body) }
-      file = response.raw_body
+      self.output_file      = response.raw_body
+      self.output_filename  = filename
+      self.output_filetype  = ::File.extname(filename)
       true
     end
 

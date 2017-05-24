@@ -8,7 +8,10 @@ my_task = Ilovepdf::Tool::Pdfa.new("PUBLIC_KEY", "SECRET_KEY");
 file = my_task.add_file '/path/to/file/document.pdf'
 
 # Set conformance
-file.conformance = 'pdfa-1b'
+file.conformance = 'pdfa-2a'
+
+# don't allow downgrading in case your conformance level fails
+file.allow_downgrade = false
 
 # and set name for output file.
 # the task will set the correct file extension for you.

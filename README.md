@@ -23,6 +23,7 @@ Develop and automate PDF processing tasks like:
 * Stamp a Watermark
 * Repair PDF
 * PDF to PDF/A
+* Validate PDF/A
 
 Each one with several settings to get your desired results.
 
@@ -103,6 +104,15 @@ end
 | try_pdf_repair                        | When a PDF to process fails we try to repair it automatically       | (default: true)                   |
 | packaged_filename                     | This allows you to specify the filename of the compressed file in case there is more than 1 file to be downloaded | |
 | output_filename                       | The final name of the processed file                                |                                   |
+
+#### Methods to query after performing the **execute** API method:
+* result: It has stored the last **Ilovepdf::Response**
+
+#### Methods to query after performing the **download** API method:
+* download_info: Returns a [struct](https://ruby-doc.org/core-2.2.0/Struct.html) with the following info
+  * :output_filename
+  * :output_file
+  * :output_filetype
 
 ### Tool attributes
 

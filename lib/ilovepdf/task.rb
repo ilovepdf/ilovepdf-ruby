@@ -1,11 +1,12 @@
 module Ilovepdf
   class Task < Ilovepdf
     attr_accessor :task_id, :tool, :packaged_filename, :output_filename,
-                  :ignore_errors, :ignore_password, :try_pdf_repair,
-                  :output_file, :output_filename, :output_filetype,
-                  :result
+                  :ignore_errors, :ignore_password, :try_pdf_repair
 
-    API_PARAMS = []
+    attr_reader :result
+
+    API_PARAMS    = []
+    DOWNLOAD_INFO = [:output_filename, :output_file, :output_filetype]
 
     def initialize(public_key, secret_key)
       super(public_key, secret_key)
@@ -50,14 +51,18 @@ module Ilovepdf
         path = '.'
       end
 
-      destination = "#{path}/#{self.output_filename}"
-      ::File.open(destination, 'wb'){|file| file.write(self.output_file) }
+      destination = "#{path}/#{download_info.output_filename}"
+      ::File.open(destination, 'wb'){|file| file.write(download_info.output_file) }
       true
     end
 
     def blob
       download_file
-      self.output_file
+      download_info.output_file
+    end
+
+    def download_info
+      @download_info ||= Struct.new(*DOWNLOAD_INFO).new
     end
 
     # [API Methods] Actions on task
@@ -67,7 +72,7 @@ module Ilovepdf
     end
 
     def execute
-      self.result = perform_process_request
+      @result = perform_process_request
     end
 
     def delete!
@@ -116,9 +121,9 @@ module Ilovepdf
         filename =  match_data[1].gsub('"', '')
       end
 
-      self.output_file      = response.raw_body
-      self.output_filename  = filename
-      self.output_filetype  = ::File.extname(filename)
+      download_info.output_filename  = filename
+      download_info.output_file      = response.raw_body
+      download_info.output_filetype  = ::File.extname(filename)
       true
     end
 

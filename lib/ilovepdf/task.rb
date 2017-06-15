@@ -3,7 +3,10 @@ module Ilovepdf
     attr_accessor :task_id, :tool, :packaged_filename, :output_filename,
                   :ignore_errors, :ignore_password, :try_pdf_repair
 
-    API_PARAMS = []
+    attr_reader :result
+
+    API_PARAMS    = []
+    DOWNLOAD_INFO = [:output_filename, :output_file, :output_filetype]
 
     def initialize(public_key, secret_key)
       super(public_key, secret_key)
@@ -38,8 +41,29 @@ module Ilovepdf
       files.last
     end
 
-    def download(path=nil)
-      download_file(path)
+    def download(path=nil, create_directory: false)
+      download_file
+
+      if path
+        path = Pathname.new(path).to_s if path.is_a?(Pathname)
+        path.chop! if path.end_with? '/'
+      else
+        path = '.'
+      end
+
+      destination = "#{path}/#{download_info.output_filename}"
+      FileUtils.mkdir_p(path) if create_directory
+      ::File.open(destination, 'wb'){|file| file.write(download_info.output_file) }
+      true
+    end
+
+    def blob
+      download_file
+      download_info.output_file
+    end
+
+    def download_info
+      @download_info ||= Struct.new(*DOWNLOAD_INFO).new
     end
 
     # [API Methods] Actions on task
@@ -49,7 +73,7 @@ module Ilovepdf
     end
 
     def execute
-      perform_process_request
+      @result = perform_process_request
     end
 
     def delete!
@@ -87,7 +111,7 @@ module Ilovepdf
       @files = new_array_of_files
     end
 
-    def download_file path
+    def download_file
       response = perform_filedownload_request
       content_disposition = response.headers[:content_disposition]
 
@@ -98,15 +122,9 @@ module Ilovepdf
         filename =  match_data[1].gsub('"', '')
       end
 
-      if path
-        path = Pathname.new(path).to_s if path.is_a?(Pathname)
-        path.chop! if path.end_with? '/'
-      else
-        path = '.'
-      end
-      destination = "#{path}/#{filename}"
-      ::File.open(destination, 'wb'){|file| file.write(response.raw_body) }
-      file = response.raw_body
+      download_info.output_filename  = filename
+      download_info.output_file      = response.raw_body
+      download_info.output_filetype  = ::File.extname(filename)
       true
     end
 

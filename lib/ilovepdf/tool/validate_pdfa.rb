@@ -1,7 +1,7 @@
 module Ilovepdf
   module Tool
-    class Pdfa < ::Ilovepdf::Task
-      API_PARAMS = [:conformance, :allow_downgrade]
+    class ValidatePdfa < ::Ilovepdf::Task
+      API_PARAMS = [:conformance]
       attr_accessor *API_PARAMS
 
       CONFORMANCE_VALUES = ['pdfa-1b', 'pdfa-1a', 'pdfa-2b', 'pdfa-2u',
@@ -9,9 +9,8 @@ module Ilovepdf
                            ]
 
       def initialize(public_key, secret_key)
-        self.tool = :pdfa
+        self.tool = :validatepdfa
         super(public_key, secret_key)
-        self.allow_downgrade = true
       end
 
       def conformance= new_val
@@ -21,6 +20,11 @@ module Ilovepdf
 
       def conformance
         @conformance ||= 'pdfa-2b'
+      end
+
+      private
+      def download_file
+        raise ::Ilovepdf::Errors::UnsupportedFunctionalityError.new('This tool does not download files (Check in the sample files how to use it)')
       end
     end
   end

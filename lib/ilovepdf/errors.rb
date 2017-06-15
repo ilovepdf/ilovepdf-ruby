@@ -47,5 +47,7 @@ module Ilovepdf
         super("Provided argument is invalid. Valid values: #{valid_values.join(', ')}")
       end
     end
+    class UnsupportedFunctionalityError < ::Ilovepdf::Error
+    end
   end
 end

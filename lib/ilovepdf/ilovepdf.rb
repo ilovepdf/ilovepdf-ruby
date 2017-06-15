@@ -1,6 +1,6 @@
 module Ilovepdf
   class Ilovepdf
-    attr_accessor :api_version, :token, :encrypt_key ,:debug
+    attr_accessor :api_version, :token, :encrypt_key, :debug, :timeout, :long_timeout
 
     START_SERVER        = 'https://api.ilovepdf.com'.freeze
     API_VERSION         = 'v1'.freeze
@@ -13,10 +13,13 @@ module Ilovepdf
     def initialize(public_key=nil, secret_key=nil)
       set_api_keys(public_key, secret_key)
       api_version = API_VERSION
+      self.timeout = 10
+      self.long_timeout = nil
     end
 
     def new_task(tool_name)
-      task_klass = ::Ilovepdf::Tool.const_get(tool_name.to_s.capitalize) rescue false
+      camelized_name = Helper.camelize_str(tool_name.to_s)
+      task_klass = ::Ilovepdf::Tool.const_get(camelized_name) rescue false
       unless task_klass
         raise ::Ilovepdf::Error.new("Unknown tool '#{tool_name}'. Available tools: #{self.class.all_tool_names.to_s}")
       end
@@ -24,7 +27,7 @@ module Ilovepdf
     end
 
     def self.all_tool_names
-      ::Ilovepdf::Tool.constants.map(&:downcase)
+      ::Ilovepdf::Tool.constants.map{|tool_name| Helper.underscore_str(tool_name.to_s)}
     end
 
     def self.raise_exceptions=(value)
@@ -62,7 +65,7 @@ module Ilovepdf
     def send_request(http_method, endpoint, extra_opts={})
       to_server = worker_server ? worker_server : START_SERVER
 
-      timeout_to_use = LONG_JOB_ENDPOINTS.include?(endpoint.to_sym) ? nil : 10
+      timeout_to_use = LONG_JOB_ENDPOINTS.include?(endpoint.to_sym) ? self.long_timeout : self.timeout
       extra_opts[:body]     ||= {}
       extra_opts[:headers]  ||= {}
 

@@ -24,8 +24,8 @@ RSpec.describe Ilovepdf::Ilovepdf do
     end
   end
   describe "::all_tool_names" do
-    it "returns 12 available tools to use" do
-      expect(Ilovepdf::Ilovepdf.all_tool_names.count).to eq(12)
+    it "returns 14 available tools to use" do
+      expect(Ilovepdf::Ilovepdf.all_tool_names.count).to eq(15)
     end
   end
 end

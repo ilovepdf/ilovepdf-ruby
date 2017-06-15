@@ -9,6 +9,7 @@ require 'rest-client'
 # Base classes
 require "ilovepdf/errors"
 require "ilovepdf/response"
+require "ilovepdf/helper"
 require "ilovepdf/ilovepdf"
 require "ilovepdf/file"
 require "ilovepdf/task"
@@ -20,12 +21,15 @@ require 'ilovepdf/tool/merge'
 require 'ilovepdf/tool/officepdf'
 require 'ilovepdf/tool/pagenumber'
 require 'ilovepdf/tool/pdfa'
+require 'ilovepdf/tool/validate_pdfa'
 require 'ilovepdf/tool/pdfjpg'
 require 'ilovepdf/tool/repair'
 require 'ilovepdf/tool/rotate'
 require 'ilovepdf/tool/split'
 require 'ilovepdf/tool/unlock'
 require 'ilovepdf/tool/watermark'
+require 'ilovepdf/tool/protect'
+require 'ilovepdf/tool/extract'
 
 module Ilovepdf
   class << self

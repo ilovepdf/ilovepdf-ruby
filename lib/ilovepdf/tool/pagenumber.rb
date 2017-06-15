@@ -9,8 +9,8 @@ module Ilovepdf
 
       attr_accessor *API_PARAMS
 
-      VERTICAL_POSITION_VALUES    = ['bottom', 'top']
-      HORIZONTAL_POSITION_VALUES  = ['left', 'middle', 'right']
+      VERTICAL_POSITION_VALUES    = ['bottom', 'middle' ,'top']
+      HORIZONTAL_POSITION_VALUES  = ['left', 'center', 'right']
       FONT_FAMILY_VALUES          = [ 'Arial', 'Arial Unicode MS', 'Verdana', 'Courier',
                                       'Times New Roman', 'Comic Sans MS',
                                       'WenQuanYi Zen Hei', 'Lohit Marathi'

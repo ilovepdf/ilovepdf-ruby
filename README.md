@@ -24,6 +24,7 @@ Develop and automate PDF processing tasks like:
 * Repair PDF
 * PDF to PDF/A
 * Validate PDF/A
+* Extract
 
 Each one with several settings to get your desired results.
 

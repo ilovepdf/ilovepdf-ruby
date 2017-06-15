@@ -29,6 +29,7 @@ require 'ilovepdf/tool/split'
 require 'ilovepdf/tool/unlock'
 require 'ilovepdf/tool/watermark'
 require 'ilovepdf/tool/protect'
+require 'ilovepdf/tool/extract'
 
 module Ilovepdf
   class << self

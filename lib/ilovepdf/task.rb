@@ -41,7 +41,7 @@ module Ilovepdf
       files.last
     end
 
-    def download(path=nil)
+    def download(path=nil, create_directory: false)
       download_file
 
       if path
@@ -52,6 +52,7 @@ module Ilovepdf
       end
 
       destination = "#{path}/#{download_info.output_filename}"
+      FileUtils.mkdir_p(path) if create_directory
       ::File.open(destination, 'wb'){|file| file.write(download_info.output_file) }
       true
     end

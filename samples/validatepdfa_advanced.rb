@@ -12,4 +12,7 @@ file.conformance = 'pdfa-2a'
 # Finally is time to process the files. i.e We'll send them to Ilovepdf servers :)
 response = my_task.execute
 
-puts response.body.validated
+response.body['validations'].each do |results|
+  file = my_task.files.find{|file| file.server_filename == results['server_filename']}
+  puts "File with name '#{file.filename}' has the following status: #{results['status']}"
+end

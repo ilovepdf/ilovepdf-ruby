@@ -3,7 +3,7 @@ module Ilovepdf
     attr_accessor :api_version, :token, :encrypt_key, :debug, :timeout, :long_timeout
 
     START_SERVER        = 'https://api.ilovepdf.com'.freeze
-    API_VERSION         = 'v1'.freeze
+    API_VERSION         = 'ruby.v1'.freeze
     TOKEN_ALGORITHM     = 'HS256'.freeze
     ALL_ENDPOINTS       = [:start, :upload, :process, :download, :task].freeze
     LONG_JOB_ENDPOINTS  = [:process, :upload, :download].freeze

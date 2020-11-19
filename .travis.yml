@@ -2,4 +2,8 @@ sudo: false
 language: ruby
 rvm:
   - 2.5.0
-before_install: gem install bundler -v 1.14.6
+branches:
+  only:
+  - master
+  - development
+before_install: gem install bundler -v 2.1.4

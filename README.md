@@ -29,7 +29,7 @@ Develop and automate PDF processing tasks like:
 Each one with several settings to get your desired results.
 
 ## Requirements
-Ruby 2.0 or greater
+Ruby 2.3 or greater
 
 ## Installation
 

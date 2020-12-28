@@ -2,7 +2,7 @@ module Ilovepdf
   class Ilovepdf
     attr_accessor :api_version, :token, :encrypt_key, :debug, :timeout, :long_timeout
 
-    START_SERVER        = 'https://api.ilovepdf.com'.freeze
+    START_SERVER        = Servers::START_SERVER
     API_VERSION         = 'ruby.v1'.freeze
     TOKEN_ALGORITHM     = 'HS256'.freeze
     ALL_ENDPOINTS       = [:start, :upload, :process, :download, :task].freeze
@@ -64,7 +64,6 @@ module Ilovepdf
 
     def send_request(http_method, endpoint, extra_opts={})
       to_server = worker_server ? worker_server : START_SERVER
-
       timeout_to_use = LONG_JOB_ENDPOINTS.include?(endpoint.to_sym) ? self.long_timeout : self.timeout
       extra_opts[:body]     ||= {}
       extra_opts[:headers]  ||= {}
@@ -77,6 +76,7 @@ module Ilovepdf
       extra_opts[:body][:debug] = true if self.debug
 
       request_uri = to_server + "/v1/#{endpoint}"
+
       begin
         rest_response = RestClient::Request.execute(  method: http_method.to_sym, url: request_uri, timeout: timeout_to_use,
                                                       headers: extra_opts[:headers], payload: extra_opts[:body]

@@ -11,7 +11,7 @@ module Ilovepdf
     def initialize(public_key, secret_key)
       super(public_key, secret_key)
       response = perform_create_request
-      self.worker_server = 'https://' + response.body['server']
+      self.worker_server = "#{Servers::PROTOCOL}://" + response.body['server']
       self.task_id       = response.body['task']
 
       # Assign default values
@@ -135,7 +135,7 @@ module Ilovepdf
         server_filename: file.server_filename,
         v: API_VERSION
       }
-      response = send_request('post', 'upload/delete', body: body)
+      response = send_request('delete', "upload/#{self.task_id}/#{file.server_filename}", body: body)
     end
 
     def perform_filedownload_request
@@ -155,6 +155,9 @@ module Ilovepdf
         v: API_VERSION,
       }.merge(file_submit_params)
       .merge(extract_api_params)
+
+      
+      extracted_body = RequestPayload::FormUrlEncoded.new(body).extract_to_s
 
       response = send_request('post', 'process', body: body)
       response
@@ -202,10 +205,14 @@ module Ilovepdf
       h
     end
 
+    def extract_api_param_value(param_name)
+      send(param_name)
+    end
+
     def extract_api_params
       {}.tap do |h|
         self.class::API_PARAMS.each{ |param_name|
-          h[param_name] = send(param_name)
+          h[param_name] = extract_api_param_value(param_name)
         }
       end
     end

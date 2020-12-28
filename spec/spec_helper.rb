@@ -9,12 +9,13 @@ WebMock.disable_net_connect!(allow_localhost: false)
 
 module Ilovepdf
   module RSpec
+    API_HOST = ::Ilovepdf::Servers::HOST
     ENDPOINTS_URI_REGEXP = {
-      start:    /api(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(start)(\/(.*))?/i,
-      upload:   /api(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(upload)(\/(.*))?/i,
-      process:  /api(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(process)(\/(.*))?/i,
-      download: /api(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(download)(\/(.*))?/i,
-      task:     /api(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(task)(\/(.*))?/i
+      start:    /#{API_HOST}(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(start)(\/(.*))?/i,
+      upload:   /#{API_HOST}(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(upload)(\/(.*))?/i,
+      process:  /#{API_HOST}(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(process)(\/(.*))?/i,
+      download: /#{API_HOST}(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(download)(\/(.*))?/i,
+      task:     /#{API_HOST}(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(task)(\/(.*))?/i
     }
 
     class << self
@@ -32,7 +33,7 @@ module Ilovepdf
 
     ENDPOINTS_DEFAULT_RESPONSES = {
       start: {
-        body:     {task: 'abc', server: "api400.ilovepdf.com"},
+        body:     {task: 'abc', server: "#{API_HOST}400.ilovepdf.com"},
         headers:  { 'Content-Type' => 'application/json' }
       },
       upload:{

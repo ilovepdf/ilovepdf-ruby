@@ -7,12 +7,15 @@ require 'jwt'
 require 'rest-client'
 
 # Base classes
+require "ilovepdf/servers"
 require "ilovepdf/errors"
 require "ilovepdf/response"
 require "ilovepdf/helper"
 require "ilovepdf/ilovepdf"
 require "ilovepdf/file"
 require "ilovepdf/task"
+require 'ilovepdf/element'
+require 'ilovepdf/request_payload/form_url_encoded'
 
 # Load tool classes
 require 'ilovepdf/tool/compress'

@@ -42,7 +42,10 @@ module Ilovepdf
     end
 
     # Library errors
-    class ArgumentEnumError < ::ArgumentError
+    class ArgumentError < ::ArgumentError
+    end
+    
+    class ArgumentEnumError < ArgumentError
       def initialize(valid_values)
         super("Provided argument is invalid. Valid values: #{valid_values.join(', ')}")
       end

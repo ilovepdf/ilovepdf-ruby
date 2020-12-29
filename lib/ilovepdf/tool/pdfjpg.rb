@@ -5,9 +5,9 @@ module Ilovepdf
 
       MODE_VALUES = ['pages', 'extract']
 
-      def initialize(public_key, secret_key)
+      def initialize(public_key, secret_key, make_start=true)
         self.tool = :pdfjpg
-        super(public_key, secret_key)
+        super(public_key, secret_key, make_start)
       end
 
       def mode=(new_val)

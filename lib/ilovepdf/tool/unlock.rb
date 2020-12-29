@@ -3,9 +3,9 @@ module Ilovepdf
     class Unlock < ::Ilovepdf::Task
       API_PARAMS = []
 
-      def initialize(public_key, secret_key)
+      def initialize(public_key, secret_key, make_start=true)
         self.tool = :unlock
-        super(public_key, secret_key)
+        super(public_key, secret_key, make_start)
       end
     end
   end

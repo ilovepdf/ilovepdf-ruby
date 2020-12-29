@@ -4,9 +4,9 @@ module Ilovepdf
       API_PARAMS = [:password]
       attr_accessor *API_PARAMS
 
-      def initialize(public_key, secret_key)
+      def initialize(public_key, secret_key, make_start=true)
         self.tool = :protect
-        super(public_key, secret_key)
+        super(public_key, secret_key, make_start)
       end
     end
   end

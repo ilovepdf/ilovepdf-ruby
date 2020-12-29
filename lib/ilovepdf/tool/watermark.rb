@@ -12,9 +12,9 @@ module Ilovepdf
 
       attr_accessor *API_PARAMS
 
-      def initialize(public_key, secret_key)
+      def initialize(public_key, secret_key, make_start=true)
         self.tool = :watermark
-        super(public_key, secret_key)
+        super(public_key, secret_key, make_start)
       end
 
       def add_element(element)

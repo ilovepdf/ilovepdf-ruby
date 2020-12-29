@@ -6,9 +6,9 @@ module Ilovepdf
 
       COMPRESSION_LEVEL_VALUES = ["extreme", "recommended", "low"]
 
-      def initialize(public_key, secret_key)
+      def initialize(public_key, secret_key, make_start=true)
         self.tool = :compress
-        super(public_key, secret_key)
+        super(public_key, secret_key, make_start)
       end
 
       def compression_level= level

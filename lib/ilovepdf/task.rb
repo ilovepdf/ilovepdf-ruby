@@ -8,16 +8,51 @@ module Ilovepdf
     API_PARAMS    = []
     DOWNLOAD_INFO = [:output_filename, :output_file, :output_filetype]
 
-    def initialize(public_key, secret_key)
+    def initialize(public_key, secret_key, make_start=false)
       super(public_key, secret_key)
-      response = perform_create_request
-      self.worker_server = "#{Servers::PROTOCOL}://" + response.body['server']
-      self.task_id       = response.body['task']
-
+      
       # Assign default values
       self.ignore_errors    = true
       self.ignore_password  = true
       self.try_pdf_repair   = true
+
+      @chained_task = (make_start == false)
+      if make_start
+        response = perform_start_request
+        self.worker_server = "#{Servers::PROTOCOL}://" + response.body['server']
+        self.task_id       = response.body['task']
+      end
+    end
+
+    def chained_task?
+      @chained_task
+    end
+
+    def next(next_tool)
+      body = {
+        v: API_VERSION,
+        task: self.task_id,
+        tool: next_tool,
+      }
+      extracted_body = RequestPayload::FormUrlEncoded.new(body).extract_to_s
+
+      begin
+        response = send_request('post', "task/next", body: extracted_body)
+        no_task_present = !response.body.key?('task') || response.body['task'].to_s.empty?
+        raise StartError.new(response, custom_msg: "No task assigned on chained start") if no_task_present
+      rescue ApiError => e
+        raise StartError.new(e, custom_msg: "Error on start chained task")
+      end
+      
+      next_task = self.new_task(next_tool)
+      next_task.send(:"worker_server=", worker_server)
+      next_task.send(:"task_id=", response.body['task'])
+
+      response.body['files'].each do |server_filename, filename|
+        next_task.files << File.new(server_filename, filename)
+      end
+
+      next_task
     end
 
     def assign_meta_value(key, value)
@@ -163,11 +198,15 @@ module Ilovepdf
       response
     end
 
-    def perform_create_request
-      request_opts = {
-        body: {v: API_VERSION}
+    def perform_start_request
+      body = {
+        v: API_VERSION
       }
-      response = send_request('get', 'start/' + self.tool.to_s, request_opts)
+      extracted_body = RequestPayload::FormUrlEncoded.new(body).extract_to_s
+      response = send_request('get', "start/#{self.tool}", body: extracted_body)
+      is_server_defined = response.body.key?('server') && !response.body['server'].to_s.empty?
+      raise ::Ilovepdf::Errors::StartError.new("No server assigned on start") if !is_server_defined
+      response
     end
 
     def perform_upload_request filepath

@@ -7,10 +7,10 @@ module Ilovepdf
       ORIENTATION_VALUES  = ['portrait', 'landscape']
       PAGESIZE_VALUES     = ['fit', 'A4', 'letter']
 
-      def initialize(public_key, secret_key)
+      def initialize(public_key, secret_key, make_start=true)
         self.tool = :imagepdf
         self.merge_after = true
-        super(public_key, secret_key)
+        super(public_key, secret_key, make_start)
       end
 
       def orientation=(new_val)

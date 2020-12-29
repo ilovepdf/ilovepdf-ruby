@@ -11,8 +11,8 @@ RSpec.describe Ilovepdf::Tool::Compress do
       expect{subject.compression_level = 'extreme'}.not_to raise_error
     end
   end
-  describe "downloads the file" do
-    it "asdasd" do
+  describe "#download" do
+    it "it downloads a sample pdf file" do
       subject.add_file(::Ilovepdf::RSpec.sample_pdf_filepath)
       response = subject.execute
       subject.download

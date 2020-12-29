@@ -17,13 +17,13 @@ module Ilovepdf
       self.long_timeout = nil
     end
 
-    def new_task(tool_name)
+    def new_task(tool_name, make_start = true)
       camelized_name = Helper.camelize_str(tool_name.to_s)
       task_klass = ::Ilovepdf::Tool.const_get(camelized_name) rescue false
       unless task_klass
         raise ::Ilovepdf::Error.new("Unknown tool '#{tool_name}'. Available tools: #{self.class.all_tool_names.to_s}")
       end
-      task_klass.new(@public_key, @secret_key)
+      task_klass.new(@public_key, @secret_key, make_start)
     end
 
     def self.all_tool_names

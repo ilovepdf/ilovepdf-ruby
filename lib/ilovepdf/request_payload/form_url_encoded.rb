@@ -6,6 +6,10 @@ module Ilovepdf
         @body = body
       end
 
+      def mime_type
+        'application/x-www-form-urlencoded'
+      end
+
       def extract_to_s
         components = []
 

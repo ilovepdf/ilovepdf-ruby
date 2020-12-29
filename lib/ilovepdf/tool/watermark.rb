@@ -53,7 +53,7 @@ module Ilovepdf
 
       private
 
-      # Do nothing;
+      # Do nothing; Use 'add_element' method to alter the elements array
       def elements=(val)
       end
 

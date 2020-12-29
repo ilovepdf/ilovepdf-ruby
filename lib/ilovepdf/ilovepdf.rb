@@ -96,7 +96,11 @@ module Ilovepdf
     end
 
     def klass_error_for(endpoint)
-      error_klass = ::Ilovepdf::Errors.const_get("#{endpoint.to_s.capitalize}Error") rescue false
+      endpoint_base = /^([^\/\?]+)\/?/.match(endpoint)
+      if endpoint_base
+        endpoint_base = endpoint_base[1]
+        error_klass = ::Ilovepdf::Errors.const_get("#{endpoint_base.to_s.capitalize}Error") rescue false
+      end
       error_klass = ::Ilovepdf::ApiError if !error_klass # use generic ApiError
       error_klass
     end

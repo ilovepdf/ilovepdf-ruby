@@ -40,6 +40,8 @@ module Ilovepdf
     end
     class UploadError < ::Ilovepdf::ApiError
     end
+    class DownloadError < ::Ilovepdf::ApiError
+    end
 
     # Library errors
     class ArgumentError < ::ArgumentError

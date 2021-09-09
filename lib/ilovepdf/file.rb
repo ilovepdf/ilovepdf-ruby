@@ -12,12 +12,13 @@ module Ilovepdf
     end
 
     def file_options
-      {
+      h = {
         server_filename: self.server_filename,
         filename: self.filename,
-        rotate: self.rotate,
-        password: self.password
+        rotate: self.rotate
       }
+      h[:password] = self.password if self.password
+      h
     end
 
     def rotate= degrees

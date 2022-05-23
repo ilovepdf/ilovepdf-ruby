@@ -6,7 +6,9 @@ require 'securerandom'
 require 'jwt'
 require 'rest-client'
 
+
 # Base classes
+require "ilovepdf/refinements"
 require "ilovepdf/servers"
 require "ilovepdf/errors"
 require "ilovepdf/response"
@@ -33,6 +35,19 @@ require 'ilovepdf/tool/unlock'
 require 'ilovepdf/tool/watermark'
 require 'ilovepdf/tool/protect'
 require 'ilovepdf/tool/extract'
+
+# Load signature classes
+require 'ilovepdf/signature'
+require 'ilovepdf/signature/file_element'
+require 'ilovepdf/signature/signature_element'
+require 'ilovepdf/signature/initials_element'
+require 'ilovepdf/signature/input_element'
+require 'ilovepdf/signature/name_element'
+require 'ilovepdf/signature/date_element'
+require 'ilovepdf/signature/text_element'
+require 'ilovepdf/signature/receiver'
+require 'ilovepdf/signature/management'
+require 'ilovepdf/tool/signature'
 
 module Ilovepdf
   class << self

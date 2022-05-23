@@ -1,6 +1,6 @@
 module Ilovepdf
   class File
-    attr_accessor :server_filename, :filename, :password
+    attr_accessor :server_filename, :filename, :password, :info
     attr_reader :rotate
 
     ROTATION_VALUES = [0, 90, 180, 270]

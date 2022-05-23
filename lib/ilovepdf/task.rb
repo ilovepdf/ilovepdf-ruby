@@ -10,7 +10,6 @@ module Ilovepdf
 
     def initialize(public_key, secret_key, make_start=false)
       super(public_key, secret_key)
-      
       # Assign default values
       self.ignore_errors    = true
       self.ignore_password  = true
@@ -43,7 +42,7 @@ module Ilovepdf
       rescue ApiError => e
         raise StartError.new(e, custom_msg: "Error on start chained task")
       end
-      
+
       next_task = self.new_task(next_tool)
       next_task.send(:"worker_server=", worker_server)
       next_task.send(:"task_id=", response.body['task'])
@@ -191,7 +190,7 @@ module Ilovepdf
       }.merge(file_submit_params)
       .merge(extract_api_params)
 
-      
+
       extracted_body = RequestPayload::FormUrlEncoded.new(body).extract_to_s
 
       response = send_request('post', 'process', body: body)
@@ -206,6 +205,7 @@ module Ilovepdf
       response = send_request('get', "start/#{self.tool}", body: extracted_body)
       is_server_defined = response.body.key?('server') && !response.body['server'].to_s.empty?
       raise ::Ilovepdf::Errors::StartError.new("No server assigned on start") if !is_server_defined
+      
       response
     end
 
@@ -249,10 +249,9 @@ module Ilovepdf
     end
 
     def extract_api_params
-      {}.tap do |h|
-        self.class::API_PARAMS.each{ |param_name|
-          h[param_name] = extract_api_param_value(param_name)
-        }
+      self.class::API_PARAMS.inject({}) do |result,param_name|
+        result[param_name] = extract_api_param_value(param_name)
+        result
       end
     end
   end

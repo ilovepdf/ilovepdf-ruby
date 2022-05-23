@@ -1,7 +1,7 @@
 module Ilovepdf
   module Servers
-    PROTOCOL = 'http'.freeze # https
-    HOST = 'apidev'.freeze # api
+    PROTOCOL = 'https'.freeze
+    HOST = 'api'.freeze
     START_SERVER = "#{PROTOCOL}://#{HOST}.ilovepdf.com".freeze
   end
 end

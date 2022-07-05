@@ -30,11 +30,7 @@ Develop and automate PDF processing tasks like:
 Each one with several settings to get your desired results.
 
 ## Requirements
-<<<<<<< HEAD
 Ruby 2.6 or greater
-=======
-Ruby 2.3 or greater
->>>>>>> 0b4de9308d3557dd61a780a89ada2e081c3dc8a2
 
 ## Installation
 

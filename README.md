@@ -25,11 +25,12 @@ Develop and automate PDF processing tasks like:
 * PDF to PDF/A
 * Validate PDF/A
 * Extract
+* Sign PDF
 
 Each one with several settings to get your desired results.
 
 ## Requirements
-Ruby 2.3 or greater
+Ruby 2.6 or greater
 
 ## Installation
 
@@ -70,6 +71,25 @@ task.download
 That's it!
 
 For a more in-depth usage, refer to the [sample codes](https://github.com/ilovepdf/ilovepdf-ruby/tree/master/samples) in this repository.
+
+## Signature Tool
+The usage of this tool is different than the other tools, the following example shows how to create a signature using the iLovePDF API:
+```ruby
+my_task = Ilovepdf::Tool::Signature.new(pub_key, priv_key)
+# File object keeps information about its server_filename and the properties you can set
+file  = my_task.add_file '/path/to/file/sample.pdf'
+
+signer = Ilovepdf::Signature::Receiver.new(:signer,'name','email@email.com')
+
+signature_element = Ilovepdf::Signature::SignatureElement.new(file)
+signature_element.set_position(x: 20, y: -20)
+signature_element.pages = "1"
+signature_element.size = 40
+
+signer << signature_element
+body = my_task.send_to_sign.body
+```
+For a more in-depth usage, refer to all of the signature examples on the [sample codes](https://github.com/ilovepdf/ilovepdf-ruby/tree/master/samples) in this repository.
 
 ## Documentation
 ### HTTP API Calls

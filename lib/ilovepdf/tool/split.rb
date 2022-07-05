@@ -4,9 +4,9 @@ module Ilovepdf
       API_PARAMS = [:ranges, :split_mode, :fixed_range, :remove_pages, :merge_after]
       attr_accessor *API_PARAMS
 
-      def initialize(public_key, secret_key)
+      def initialize(public_key, secret_key, make_start=true)
         self.tool = :split
-        super(public_key, secret_key)
+        super(public_key, secret_key, make_start)
       end
 
       def fixed_range=(range=1)

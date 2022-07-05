@@ -9,12 +9,14 @@ WebMock.disable_net_connect!(allow_localhost: false)
 
 module Ilovepdf
   module RSpec
+    API_HOST = ::Ilovepdf::Servers::HOST
     ENDPOINTS_URI_REGEXP = {
-      start:    /api(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(start)(\/(.*))?/i,
-      upload:   /api(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(upload)(\/(.*))?/i,
-      process:  /api(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(process)(\/(.*))?/i,
-      download: /api(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(download)(\/(.*))?/i,
-      task:     /api(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(task)(\/(.*))?/i
+      start:    /#{API_HOST}(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(start)(\/(.*))?/i,
+      upload:   /#{API_HOST}(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(upload)(\/(.*))?/i,
+      process:  /#{API_HOST}(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(process)(\/(.*))?/i,
+      download: /#{API_HOST}(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(download)(\/(.*))?/i,
+      task:     /#{API_HOST}(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(task)(\/(.*))?/i,
+      signature:     /#{API_HOST}(\d+)?\.ilovepdf\.com(:\d+)?\/v1\/(signature)(\/(.*))?/i
     }
 
     class << self
@@ -32,7 +34,7 @@ module Ilovepdf
 
     ENDPOINTS_DEFAULT_RESPONSES = {
       start: {
-        body:     {task: 'abc', server: "api400.ilovepdf.com"},
+        body:     {task: 'abc', server: "#{API_HOST}400.ilovepdf.com"},
         headers:  { 'Content-Type' => 'application/json' }
       },
       upload:{
@@ -51,6 +53,57 @@ module Ilovepdf
       },
       task:{
         body:     {server_filename: "abcdefghijkl"},
+        headers:  { 'Content-Type' => 'application/json' }
+      },
+      signature:{
+        body: {
+            "about_to_expire_reminder": false,
+            "completed_on": nil,
+            "created": "2021-10-18 14:03:43",
+            "disable_notifications": nil,
+            "email": "email@email.com",
+            "expires": "2022-02-15 15:00:00",
+            "language": "en",
+            "lock_order": false,
+            "mode": "multiple",
+            "name": "Guillem",
+            "notes": nil,
+            "signer_reminder_days_cycle": 2,
+            "signer_reminders": true,
+            "subject_cc": nil,
+            "subject_signer": nil,
+            "timezone": nil,
+            "token_requester": "15928374asdf",
+            "uuid": "18B06FDC-8643-447C-BAFB-9D3F8CA421B6",
+            "uuid_visible": true,
+            "verify_enabled": true,
+            "expired": false,
+            "expiring": false,
+            "signers": [
+                {
+                    "uuid": "FCE3CAB9-2320-44C1-B18B-0F23BE2CF2FD",
+                    "name": "name",
+                    "email": "emailsigner@email.com",
+                    "phone": nil,
+                    "type": "signer",
+                    "token_requester": "1234asdf",
+                    "status": "waiting",
+                    "access_code": false,
+                    "phone_access_code": false,
+                    "force_signature_type": "all",
+                    "notes": nil
+                }
+            ],
+            "files": [
+                {
+                    "filename": "sample.pdf",
+                    "pages": 2,
+                    "filesize": 22698
+                }
+            ],
+            "certified": true,
+            "status": "draft"
+        },
         headers:  { 'Content-Type' => 'application/json' }
       }
     }

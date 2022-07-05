@@ -2,7 +2,7 @@ module Ilovepdf
   class Ilovepdf
     attr_accessor :api_version, :token, :encrypt_key, :debug, :timeout, :long_timeout
 
-    START_SERVER        = 'https://api.ilovepdf.com'.freeze
+    START_SERVER        = Servers::START_SERVER
     API_VERSION         = 'ruby.v1'.freeze
     TOKEN_ALGORITHM     = 'HS256'.freeze
     ALL_ENDPOINTS       = [:start, :upload, :process, :download, :task].freeze
@@ -17,13 +17,13 @@ module Ilovepdf
       self.long_timeout = nil
     end
 
-    def new_task(tool_name)
+    def new_task(tool_name, make_start = true)
       camelized_name = Helper.camelize_str(tool_name.to_s)
       task_klass = ::Ilovepdf::Tool.const_get(camelized_name) rescue false
       unless task_klass
         raise ::Ilovepdf::Error.new("Unknown tool '#{tool_name}'. Available tools: #{self.class.all_tool_names.to_s}")
       end
-      task_klass.new(@public_key, @secret_key)
+      task_klass.new(@public_key, @secret_key, make_start)
     end
 
     def self.all_tool_names
@@ -64,7 +64,6 @@ module Ilovepdf
 
     def send_request(http_method, endpoint, extra_opts={})
       to_server = worker_server ? worker_server : START_SERVER
-
       timeout_to_use = LONG_JOB_ENDPOINTS.include?(endpoint.to_sym) ? self.long_timeout : self.timeout
       extra_opts[:body]     ||= {}
       extra_opts[:headers]  ||= {}
@@ -77,6 +76,7 @@ module Ilovepdf
       extra_opts[:body][:debug] = true if self.debug
 
       request_uri = to_server + "/v1/#{endpoint}"
+
       begin
         rest_response = RestClient::Request.execute(  method: http_method.to_sym, url: request_uri, timeout: timeout_to_use,
                                                       headers: extra_opts[:headers], payload: extra_opts[:body]
@@ -96,7 +96,11 @@ module Ilovepdf
     end
 
     def klass_error_for(endpoint)
-      error_klass = ::Ilovepdf::Errors.const_get("#{endpoint.to_s.capitalize}Error") rescue false
+      endpoint_base = /^([^\/\?]+)\/?/.match(endpoint)
+      if endpoint_base
+        endpoint_base = endpoint_base[1]
+        error_klass = ::Ilovepdf::Errors.const_get("#{endpoint_base.to_s.capitalize}Error") rescue false
+      end
       error_klass = ::Ilovepdf::ApiError if !error_klass # use generic ApiError
       error_klass
     end

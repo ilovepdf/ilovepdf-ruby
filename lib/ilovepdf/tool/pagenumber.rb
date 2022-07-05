@@ -16,9 +16,9 @@ module Ilovepdf
                                       'WenQuanYi Zen Hei', 'Lohit Marathi'
                                     ]
 
-      def initialize(public_key, secret_key)
+      def initialize(public_key, secret_key, make_start=true)
         self.tool = :pagenumber
-        super(public_key, secret_key)
+        super(public_key, secret_key, make_start)
       end
 
       def vertical_position=(new_val)

@@ -1,18 +1,17 @@
 require "spec_helper"
-
 RSpec.describe Ilovepdf::Task do
   subject { Ilovepdf::Task.new('abcdef', 'ghijk') }
   describe "#new_task" do
     it "creates a :compress task successfully" do
       expect{ subject.new_task(:compress) }.not_to raise_error
     end
-    it "raises a Errors::AuthError when server returns 401" do
-      start_regexp = ::Ilovepdf::RSpec::ENDPOINTS_URI_REGEXP[:start]
-      stub_request(:any, start_regexp).to_return do |req|
-        {status: 401}
-      end
-      expect{ task = subject.new_task :compress }.to raise_error(Ilovepdf::Errors::AuthError)
+  end
+  it "raises a Errors::AuthError when server returns 401" do
+    start_regexp = ::Ilovepdf::RSpec::ENDPOINTS_URI_REGEXP[:start]
+    stub_request(:any, start_regexp).to_return do |req|
+      {status: 401}
     end
+    expect{ task = subject.new_task :compress }.to raise_error(Ilovepdf::Errors::AuthError)
   end
   describe "#add_file" do
     it "raises an error when file does not exist" do
@@ -36,8 +35,7 @@ RSpec.describe Ilovepdf::Task do
       subject.files << Ilovepdf::File.new('123', '456')
       h = subject.send(:file_submit_params)
       expect(h.has_key?(:files)).to eq(true)
-
-      expect(h[:files].keys.all?{|k| ['0', '1'].include?(k)}).to eq(true)
+            expect(h[:files].keys.all?{|k| ['0', '1'].include?(k)}).to eq(true)
     end
   end
 end

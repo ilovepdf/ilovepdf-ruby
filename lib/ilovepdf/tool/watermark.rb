@@ -5,44 +5,62 @@ module Ilovepdf
         :mode, :text, :image, :pages, :vertical_position, :horizontal_position,
         :vertical_position_adjustment, :horizontal_position_adjustment, :mosaic,
         :rotate, :font_family, :font_style, :font_size, :font_color, :transparency,
-        :layer
+        :layer, :elements
       ]
+
+      MODE_VALUES = ['image', 'text', 'multi']
 
       attr_accessor *API_PARAMS
 
-      VERTICAL_POSITION_VALUES    = ['bottom', 'center' ,'top']
-      HORIZONTAL_POSITION_VALUES  = ['left', 'middle', 'right']
-      FONT_FAMILY_VALUES          = ['Arial', 'Arial Unicode MS', 'Verdana', 'Courier',
-                                     'Times New Roman', 'Comic Sans MS', 'WenQuanYi Zen Hei',
-                                     'Lohit Marathi'
-                                    ]
-
-      LAYER_VALUES = ['above', 'below']
-
-      def initialize(public_key, secret_key)
+      def initialize(public_key, secret_key, make_start=true)
         self.tool = :watermark
-        super(public_key, secret_key)
+        super(public_key, secret_key, make_start)
+      end
+
+      def add_element(element)
+        raise Errors::ArgumentError.new("Element must be of type 'Ilovepdf::Element'") unless element.instance_of?(::Ilovepdf::Element)
+        elements << element
+      end
+
+      def elements
+        @elements ||= []
+      end
+
+      def mode=(new_val)
+        raise Errors::ArgumentEnumError.new(MODE_VALUES) unless MODE_VALUES.include? new_val
+        @mode = new_val
       end
 
       def vertical_position=(new_val)
-        raise Errors::ArgumentEnumError.new(VERTICAL_POSITION_VALUES) unless VERTICAL_POSITION_VALUES.include? new_val
+        raise Errors::ArgumentEnumError.new(::Ilovepdf::Element::VERTICAL_POSITION_VALUES) unless ::Ilovepdf::Element::VERTICAL_POSITION_VALUES.include? new_val
         @vertical_position = new_val
       end
 
       def horizontal_position=(new_val)
-        raise Errors::ArgumentEnumError.new(HORIZONTAL_POSITION_VALUES) unless HORIZONTAL_POSITION_VALUES.include? new_val
+        raise Errors::ArgumentEnumError.new(::Ilovepdf::Element::HORIZONTAL_POSITION_VALUES) unless ::Ilovepdf::Element::HORIZONTAL_POSITION_VALUES.include? new_val
         @horizontal_position = new_val
       end
 
       def font_family=(new_val)
-        raise Errors::ArgumentEnumError.new(FONT_FAMILY_VALUES) unless FONT_FAMILY_VALUES.include? new_val
+        raise Errors::ArgumentEnumError.new(::Ilovepdf::Element::FONT_FAMILY_VALUES) unless ::Ilovepdf::Element::FONT_FAMILY_VALUES.include? new_val
         @font_family = new_val
       end
 
       def layer=(new_val)
-        raise Errors::ArgumentEnumError.new(LAYER_VALUES) unless LAYER_VALUES.include? new_val
+        raise Errors::ArgumentEnumError.new(::Ilovepdf::Element::LAYER_VALUES) unless ::Ilovepdf::Element::LAYER_VALUES.include? new_val
         @layer = new_val
       end
+
+      private
+
+      # Do nothing; Use 'add_element' method to alter the elements array
+      def elements=(val)
+      end
+
+      def extract_api_param_value(param_name)
+        return self.elements.map{|elem| elem.to_api_hash } if param_name == :elements 
+        super
+      end # /extract_api_param_value
 
     end
   end

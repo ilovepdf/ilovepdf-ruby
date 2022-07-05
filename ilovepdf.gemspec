@@ -6,8 +6,8 @@ require 'ilovepdf/version'
 Gem::Specification.new do |spec|
   spec.name          = "ilovepdf"
   spec.version       = Ilovepdf::VERSION
-  spec.authors       = ["Leonardo Collazo"]
-  spec.email         = ["leonardo.chronicles@gmail.com"]
+  spec.authors       = ["Leonardo Collazo", "Guillem Vidal"]
+  spec.email         = ["leonardo.chronicles@gmail.com", "g.vidal.cantavella@gmail.com"]
 
   spec.summary       = %q{A library in Ruby for iLovePDF Api}
   spec.description   = %q{Develop and automate PDF processing tasks like Compress PDF, Merge PDF, Split PDF, convert Office to PDF, PDF to JPG, Images to PDF, add Page Numbers, Rotate PDF, Unlock PDF, stamp a Watermark and Repair PDF. Each one with several settings to get your desired results.}
@@ -20,10 +20,11 @@ Gem::Specification.new do |spec|
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
-  spec.required_ruby_version = '>= 2.3'
+  spec.required_ruby_version = '>= 2.6'
 
   spec.add_runtime_dependency 'rest-client', '~> 2'
   spec.add_runtime_dependency 'jwt', '~> 2'
+  spec.add_runtime_dependency 'json', '~> 2'
 
 
   spec.add_development_dependency "bundler", ">= 1.16"

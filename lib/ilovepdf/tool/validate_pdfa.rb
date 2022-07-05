@@ -8,9 +8,9 @@ module Ilovepdf
                             'pdfa-2a', 'pdfa-3b', 'pdfa-3u', 'pdfa-3a'
                            ]
 
-      def initialize(public_key, secret_key)
+      def initialize(public_key, secret_key, make_start=true)
         self.tool = :validatepdfa
-        super(public_key, secret_key)
+        super(public_key, secret_key, make_start)
       end
 
       def conformance= new_val

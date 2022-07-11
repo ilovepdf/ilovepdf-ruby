@@ -1,6 +1,12 @@
 module Ilovepdf
   module Signature
-    class Management < ::Ilovepdf::Ilovepdf
+    class Management < ::Ilovepdf::Task
+
+      def initialize(public_key, secret_key, make_start=false)
+        self.tool = :sign
+        super(public_key, secret_key, make_start)
+      end
+
       def get_status(signature_token)
         send_request("get", "signature/requesterview/#{signature_token}")
       end
@@ -9,15 +15,15 @@ module Ilovepdf
         send_request("get", "signature/list", body: {page: current_page,per_page: per_page})
       end
 
-      def download_audit(signature_token, directory = nil,create_directory: true,filename:)
-        download_file("signature/#{signature_token}/download-audit",directory,{create_directory: create_directory, filename: filename})
+      def download_audit(signature_token, directory = __dir__,create_directory: true,filename:)
+        download_file("signature/#{signature_token}/download-audit",directory,create_directory: create_directory, filename: filename)
       end
 
-      def download_original(signature_token, directory = nil,create_directory: true,filename:)
+      def download_original(signature_token, directory¡,create_directory: true,filename:)
         download_file("signature/#{signature_token}/download-original",directory,{create_directory: create_directory, filename: filename})
       end
 
-      def download_signed(signature_token, directory = nil,create_directory: true,filename:)
+      def download_signed(signature_token, directory = __dir__,create_directory: true,filename:)
         download_file("signature/#{signature_token}/download-signed",directory,{create_directory: create_directory, filename: filename})
       end
 
@@ -54,16 +60,20 @@ module Ilovepdf
       private
 
       def download_file(url,directory,create_directory: true,filename:)
+        if self.worker_server.nil?
+          response = perform_start_request
+          self.worker_server = "#{Servers::PROTOCOL}://" + response.body['server']
+        end
+        
         response = send_request("get",url)
         content_disposition = response.headers[:content_disposition]
-        filename_to_set = File.basename(filename,File.extname(filename)) unless filename.nil?
+        filename_to_set = ::File.basename(filename,::File.extname(filename)) unless filename.nil?
+        external_filename = parse_filename_from_content_disposition(content_disposition)
+
         if filename_to_set.nil?
-          if match_data = /filename\*\=utf-8\'\'([\W\w]+)/.match(content_disposition)
-            filename_to_set = URI.unescape(match_data[1].gsub('"', ''))
-          else
-            match_data  = / .*filename=\"([\W\w]+)\"/.match(content_disposition)
-            filename_to_set =  match_data[1].gsub('"', '')
-          end
+          filename_to_set = external_filename 
+        else
+          filename_to_set << ::File.extname(external_filename)
         end
 
         if directory
@@ -74,9 +84,19 @@ module Ilovepdf
         end
 
         destination = "#{directory}/#{filename_to_set}"
+
         FileUtils.mkdir_p(directory) if create_directory
         ::File.open(destination, 'wb'){|file| file.write(response.raw_body) }
         destination
+      end
+
+      def parse_filename_from_content_disposition(content_disposition)
+        if match_data = /filename\*\=utf-8\'\'([\W\w]+)/.match(content_disposition)
+          filename_to_set = URI.unescape(match_data[1].gsub('"', ''))
+        else
+          match_data  = / .*filename=\"([\W\w]+)\"/.match(content_disposition)
+          filename_to_set =  match_data[1].gsub('"', '')
+        end
       end
     end
   end

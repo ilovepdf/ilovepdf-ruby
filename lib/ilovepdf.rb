@@ -35,6 +35,7 @@ require 'ilovepdf/tool/unlock'
 require 'ilovepdf/tool/watermark'
 require 'ilovepdf/tool/protect'
 require 'ilovepdf/tool/extract'
+require 'ilovepdf/tool/signature'
 
 # Load signature classes
 require 'ilovepdf/signature'

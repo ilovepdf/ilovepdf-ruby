@@ -19,7 +19,7 @@ module Ilovepdf
         download_file("signature/#{signature_token}/download-audit",directory,create_directory: create_directory, filename: filename)
       end
 
-      def download_original(signature_token, directory¡,create_directory: true,filename:)
+      def download_original(signature_token, directory = __dir__,create_directory: true,filename:)
         download_file("signature/#{signature_token}/download-original",directory,{create_directory: create_directory, filename: filename})
       end
 

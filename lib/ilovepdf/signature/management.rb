@@ -20,11 +20,11 @@ module Ilovepdf
       end
 
       def download_original(signature_token, directory = __dir__,create_directory: true,filename:)
-        download_file("signature/#{signature_token}/download-original",directory,{create_directory: create_directory, filename: filename})
+        download_file("signature/#{signature_token}/download-original",directory,create_directory: create_directory, filename: filename)
       end
 
       def download_signed(signature_token, directory = __dir__,create_directory: true,filename:)
-        download_file("signature/#{signature_token}/download-signed",directory,{create_directory: create_directory, filename: filename})
+        download_file("signature/#{signature_token}/download-signed",directory,create_directory: create_directory, filename: filename)
       end
 
       def send_reminders(signature_token)

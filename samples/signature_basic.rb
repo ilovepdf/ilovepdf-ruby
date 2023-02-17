@@ -15,4 +15,7 @@ signature_element.pages = "1"
 signature_element.size = 40
 
 signer << signature_element
+
+my_task << signer
+
 body = my_task.send_to_sign.body

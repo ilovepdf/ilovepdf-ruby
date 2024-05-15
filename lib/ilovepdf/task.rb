@@ -150,7 +150,7 @@ module Ilovepdf
       content_disposition = response.headers[:content_disposition]
 
       if match_data = /filename\*\=utf-8\'\'([\W\w]+)/.match(content_disposition)
-        filename = URI.unescape(match_data[1].gsub('"', ''))
+        filename = URI.decode_www_form_component(match_data[1].gsub('"', ''))
       else
         match_data  = / .*filename=\"([\W\w]+)\"/.match(content_disposition)
         filename =  match_data[1].gsub('"', '')

@@ -29,7 +29,7 @@ module Ilovepdf
       def delay=(new_val)
       end
 
-      def page_size(new_val)
+      def page_size=(new_val)
       end
 
       def page_orientation=(new_val)

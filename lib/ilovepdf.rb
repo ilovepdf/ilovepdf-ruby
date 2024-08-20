@@ -18,6 +18,9 @@ require "ilovepdf/file"
 require "ilovepdf/task"
 require 'ilovepdf/element'
 require 'ilovepdf/request_payload/form_url_encoded'
+require 'ilovepdf/extra_upload_params/base'
+require 'ilovepdf/extra_upload_params/signature'
+require 'ilovepdf/pdf_page'
 
 # Load tool classes
 require 'ilovepdf/tool/compress'

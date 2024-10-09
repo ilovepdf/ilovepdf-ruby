@@ -62,17 +62,17 @@ module Ilovepdf
       @files ||= []
     end
 
-    def add_file(filepath)
+    def add_file(filepath, extra_upload_params = nil)
       raise ArgumentError.new("No file exists in '#{filepath}'") unless ::File.exist?(filepath)
-      file = perform_upload_request(filepath)
+      file = perform_upload_request(filepath,extra_upload_params)
       files << file
-      files.last
+      file
     end
 
-    def add_file_from_url(url)
-      file = perform_upload_url_request(url)
+    def add_file_from_url(url,extra_upload_params = nil)
+      file = perform_upload_url_request(url,extra_upload_params)
       files << file
-      files.last
+      file
     end
 
     def download(path=nil, create_directory: false)
@@ -209,7 +209,7 @@ module Ilovepdf
       response
     end
 
-    def perform_upload_request filepath
+    def perform_upload_request filepath, tool_additional_params = nil
       request_opts = {
         body: {
           multipart: true,
@@ -218,12 +218,16 @@ module Ilovepdf
           file: ::File.new(filepath, 'rb')
         }
       }
+      if tool_additional_params.is_a?(::Ilovepdf::ExtraUploadParams::Base)
+        request_opts[:body].merge!(tool_additional_params.extra_params.transform_keys(&:to_sym))
+      end
+      
       # filepath
       response = send_request('post', 'upload', request_opts)
-      File.new(response.body['server_filename'], Pathname.new(filepath).basename.to_s)
+      self.get_file_from_response(response.body,filepath)
     end
 
-    def perform_upload_url_request url
+    def perform_upload_url_request url,tool_additional_params = nil
       request_opts = {
         body: {
           multipart: true,
@@ -232,8 +236,11 @@ module Ilovepdf
           cloud_file: url
         }
       }
+      if tool_additional_params.is_a?(::Ilovepdf::ExtraUploadParams::Base)
+        request_opts[:body].merge!(tool_additional_params.extra_params.transform_keys(&:to_sym))
+      end
       response = send_request('post', 'upload', request_opts)
-      File.new(response.body['server_filename'], Pathname.new(url).basename.to_s)
+      self.get_file_from_response(response.body,url)
     end
 
     def file_submit_params
@@ -253,6 +260,22 @@ module Ilovepdf
         result[param_name] = extract_api_param_value(param_name)
         result
       end
+    end
+
+    private 
+
+    def get_file_from_response(response_body,filePathOrUrl)
+      file = File.new(response_body['server_filename'], Pathname.new(filePathOrUrl).basename.to_s)
+      if response_body['pdf_pages'] 
+        file.pdf_pages =  response_body['pdf_pages']
+      end
+      if response_body['pdf_page_number'] 
+        file.pdf_page_number =  response_body['pdf_page_number'].to_i
+      end
+      if response_body['pdf_forms'] 
+        file.pdf_forms =  response_body['pdf_forms']
+      end
+      file
     end
   end
 end

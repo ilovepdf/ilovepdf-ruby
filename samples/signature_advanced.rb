@@ -6,7 +6,9 @@ pub_key = "YOUR_PUBLIC_KEY"
 priv_key = "YOUR_PRIVATE_KEY"
 
 my_task = Ilovepdf::Tool::Signature.new(pub_key, priv_key)
-my_task.add_brand(name: "my company name",logo: "/path/to/logo/logo.png")
+# Upload brand logo
+brand_logo = my_task.upload_brand_logo_file("/path/to/logo/logo.png")
+my_task.add_brand(name: "my company name",logo: brand_logo)
 my_task.language = "es"
 my_task.lock_order = false # if false, allows receivers of signer type to sign in parallel.
                            # if true receivers of signer type must sign sequentially in order.
@@ -22,7 +24,6 @@ file1  = my_task.add_file '/path/to/file/sample.pdf'
 file2  = my_task.add_file '/path/to/file/sample2.pdf'
 
 signer = Ilovepdf::Signature::Receiver.new(:signer,'name','email@email.com')
-signer.phone = "34677231431" #Phone number with the country prefix at the beginning => "+34677231431", make sure you have enough credits.
 signer.phone = "34677231431" #Phone number with the country prefix at the beginning => "+34677231431", make sure you have enough credits.
 
 signature_element = Ilovepdf::Signature::SignatureElement.new(file1)

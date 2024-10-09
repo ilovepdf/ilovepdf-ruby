@@ -73,10 +73,16 @@ module Ilovepdf
         value
       end
 
+      def upload_brand_logo_file(logoPath)
+        perform_upload_request(logoPath)
+      end
+
+      def upload_brand_logo_file_from_url(logoUrl)
+        perform_upload_url_request(logoUrl)
+      end
 
       def add_brand(name:,logo:)
-        brand_logo_file = perform_upload_request(logo)
-        @brand_logo = brand_logo_file.server_filename
+        @brand_logo = logo.server_filename
         @brand_name = name
       end
 
